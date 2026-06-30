@@ -1,0 +1,188 @@
+ MySQL  localhost:33060+ ssl  office  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| infocompany        |
+| information_schema |
+| infosys            |
+| mydatabase         |
+| mysql              |
+| office             |
+| owner_pet_details  |
+| performance_schema |
+| pet_db             |
+| salesdb            |
+| student            |
+| sys                |
+| xyzcompany         |
++--------------------+
+13 rows in set (0.0025 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > use office;
+Default schema set to `office`.
+Fetching global names, object names from `office` for auto-completion... Press ^C to stop.
+ MySQL  localhost:33060+ ssl  office  SQL > desc employees;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| emp_id   | int         | NO   | PRI | NULL    | auto_increment |
+| emp_name | varchar(30) | YES  |     | NULL    |                |
+| dept_id  | int         | YES  |     | NULL    |                |
+| salary   | int         | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.0023 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > desc departments;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| dept_id | int  | YES  |     | NULL    |       |
+| salary  | int  | YES  |     | NULL    |       |
++---------+------+------+-----+---------+-------+
+2 rows in set (0.0021 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > drop table departmets;
+ERROR: 1051: Unknown table 'office.departmets'
+ MySQL  localhost:33060+ ssl  office  SQL > drop table departments;
+Query OK, 0 rows affected (0.0465 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > create table departments(dept_id int, dept_name varchar(20));
+Query OK, 0 rows affected (0.0543 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > insert into departments(dept_id,dept_name) values(101,'Sales'),(102,'HR'),(103,'IT'),(105,'Marketing');
+Query OK, 4 rows affected (0.0316 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  office  SQL > select * from departments;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|     101 | Sales     |
+|     102 | HR        |
+|     103 | IT        |
+|     105 | Marketing |
++---------+-----------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:33060+ ssl  office  SQL >
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e inner join departments d on e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| shree    | Sales     |  93000 |
+| vicky    | IT        |  92000 |
++----------+-----------+--------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e left join departments d on e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| shree    | Sales     |  93000 |
+| vicky    | IT        |  92000 |
+| priya    | NULL      |  91000 |
+| praveen  | NULL      |  90000 |
++----------+-----------+--------+
+6 rows in set (0.0010 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e right join departments d on e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| shree    | Sales     |  93000 |
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| vicky    | IT        |  92000 |
+| NULL     | Marketing |   NULL |
++----------+-----------+--------+
+5 rows in set (0.0007 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e left join departments d on e.dept_id = d.dept_id union select e.emp_name, d.dept_name, e.salary from employees e right join departments d on e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| shree    | Sales     |  93000 |
+| vicky    | IT        |  92000 |
+| priya    | NULL      |  91000 |
+| praveen  | NULL      |  90000 |
+| NULL     | Marketing |   NULL |
++----------+-----------+--------+
+7 rows in set (0.0277 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e left join departments d on e.dept_id = d.dept_id where d.dept_id is null;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| priya    | NULL      |  91000 |
+| praveen  | NULL      |  90000 |
++----------+-----------+--------+
+2 rows in set (0.0009 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e right join departments d on e.dept_id = d.dept_id where e.dept_id is null;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| NULL     | Marketing |   NULL |
++----------+-----------+--------+
+1 row in set (0.0008 sec)
+ MySQL  localhost:33060+ ssl  office  SQL >
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e, departments d where e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| shree    | Sales     |  93000 |
+| vicky    | IT        |  92000 |
++----------+-----------+--------+
+4 rows in set (0.0007 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from departments d right join employees e on e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| shree    | Sales     |  93000 |
+| vicky    | IT        |  92000 |
+| priya    | NULL      |  91000 |
+| praveen  | NULL      |  90000 |
++----------+-----------+--------+
+6 rows in set (0.0006 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from departments d left join employees e on e.dept_id = d.dept_id;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| shree    | Sales     |  93000 |
+| jerry    | Sales     |  95000 |
+| panda    | HR        |  94000 |
+| vicky    | IT        |  92000 |
+| NULL     | Marketing |   NULL |
++----------+-----------+--------+
+5 rows in set (0.0009 sec)
+ MySQL  localhost:33060+ ssl  office  SQL > select e.emp_name, d.dept_name, e.salary from employees e cross join departments d;
++----------+-----------+--------+
+| emp_name | dept_name | salary |
++----------+-----------+--------+
+| jerry    | Marketing |  95000 |
+| jerry    | IT        |  95000 |
+| jerry    | HR        |  95000 |
+| jerry    | Sales     |  95000 |
+| panda    | Marketing |  94000 |
+| panda    | IT        |  94000 |
+| panda    | HR        |  94000 |
+| panda    | Sales     |  94000 |
+| shree    | Marketing |  93000 |
+| shree    | IT        |  93000 |
+| shree    | HR        |  93000 |
+| shree    | Sales     |  93000 |
+| vicky    | Marketing |  92000 |
+| vicky    | IT        |  92000 |
+| vicky    | HR        |  92000 |
+| vicky    | Sales     |  92000 |
+| priya    | Marketing |  91000 |
+| priya    | IT        |  91000 |
+| priya    | HR        |  91000 |
+| priya    | Sales     |  91000 |
+| praveen  | Marketing |  90000 |
+| praveen  | IT        |  90000 |
+| praveen  | HR        |  90000 |
+| praveen  | Sales     |  90000 |
++----------+-----------+--------+
+24 rows in set (0.0008 sec)
+ MySQL  localhost:33060+ ssl  office  SQL >
+
